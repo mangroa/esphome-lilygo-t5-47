@@ -1,20 +1,22 @@
-// Copyright (c) 2019-2022 Valentin Roland (github.com/vroland)
-// SPDX-License-Identifier: GPL-3.0-or-later
-//
-// Original source: https://github.com/vroland/epdiy
-// Modified by Xinyuan-LilyGO; combined work licensed under GPL-3.0-or-later:
-// https://github.com/Xinyuan-LilyGO/LilyGo-EPD47
-
-#pragma once
-
-#include <driver/gpio.h>
-#include <stdint.h>
+#ifndef _ED047TC1_H_
+#define _ED047TC1_H_
 
 #ifdef __cplusplus
-namespace esphome {
-namespace lilygo_t5_47_plus {
 extern "C" {
 #endif
+
+/******************************************************************************/
+/***        include files                                                   ***/
+/******************************************************************************/
+
+#include <driver/gpio.h>
+#include <esp_attr.h>   // IRAM_ATTR — no longer transitively included in ESP32 Arduino core 3.x
+
+#include <stdint.h>
+
+/******************************************************************************/
+/***        macro definitions                                               ***/
+/******************************************************************************/
 
 #if CONFIG_IDF_TARGET_ESP32
 
@@ -65,10 +67,24 @@ extern "C" {
 #define D0 GPIO_NUM_8
 
 #else
-#error "Unknown SOC"
+    #error "Unknown SOC"
 #endif
 
+/******************************************************************************/
+/***        type definitions                                                ***/
+/******************************************************************************/
+
+/******************************************************************************/
+/***        exported variables                                              ***/
+/******************************************************************************/
+
+/******************************************************************************/
+/***        exported functions                                              ***/
+/******************************************************************************/
+
 void epd_base_init(uint32_t epd_row_width);
+void epd_poweron();
+void epd_poweroff();
 
 /**
  * @brief Start a draw cycle.
@@ -96,17 +112,17 @@ void epd_end_frame();
  *       This sequence of operations allows for pipelining data preparation and
  *       transfer, reducing total refresh times.
  */
-void epd_output_row(uint32_t output_time_dus);
+void  epd_output_row(uint32_t output_time_dus);
 
 /**
  * @brief Skip a row without writing to it.
  */
-void epd_skip();
+void  epd_skip();
 
 /**
  * @brief Get the currently writable line buffer.
  */
-uint8_t *epd_get_current_buffer();
+uint8_t *  epd_get_current_buffer();
 
 /**
  * @brief Switches front and back line buffer.
@@ -114,10 +130,13 @@ uint8_t *epd_get_current_buffer();
  * @note If the switched-to line buffer is currently in use, this function
  *       blocks until transmission is done.
  */
-void epd_switch_buffer();
+void  epd_switch_buffer();
 
 #ifdef __cplusplus
-}  // extern "C"
-}  // namespace lilygo_t5_47_plus
-}  // namespace esphome
+}
 #endif
+
+#endif
+/******************************************************************************/
+/***        END OF FILE                                                     ***/
+/******************************************************************************/
